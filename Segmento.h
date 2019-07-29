@@ -1,11 +1,7 @@
 #ifndef SEGMENTO_H
 #define SEGMENTO_H
+#include <iostream>
 #include "Coordenada.h"
-
-enum Direccion {ARRIBA    = 72,
-                ABAJO     = 80,
-                IZQUIERDA = 77,
-                DERECHA   = 75};
 
 class Segmento{
 private:
@@ -13,8 +9,9 @@ private:
     Segmento*   anterior;
     Segmento*   siguiente;
     Coordenada* coordenada;
+    int         color;
 public:
-    Segmento(Direccion* d, Coordenada* c, Segmento* ant, Segmento* sig);
+    Segmento(Direccion d, Coordenada* c, Segmento* ant, Segmento* sig, int color);
     ~Segmento();
 
     void setProximaDireccion(Direccion d);
@@ -24,8 +21,9 @@ public:
     Segmento*   getAnterior();
     Segmento*   getSiguiente();
     Coordenada* getCoordenada();
+    int         getColor();
 
-    void mover();
+    void moverEnCascada();
 };
 
 #endif // SEGMENTO_H

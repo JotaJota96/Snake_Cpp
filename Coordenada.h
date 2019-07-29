@@ -6,6 +6,12 @@
  * Esto es asi porque los caracteres en consola tienen de ancho la mitad del alto
  */
 
+enum Direccion {ARRIBA    = 72,
+                ABAJO     = 80,
+                IZQUIERDA = 77,
+                DERECHA   = 75};
+
+
 class Coordenada{
 private:
     int x;
@@ -21,6 +27,7 @@ public:
     void setX(int x);
     void setY(int y);
 
+    void mover(Direccion d);
     void down();
     void up();
     void left();
