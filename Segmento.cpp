@@ -5,7 +5,7 @@ Segmento::Segmento(Direccion d, Coordenada* c, Segmento* ant, Segmento* sig, int
     this->coordenada = c;
     this->anterior = ant;
     this->siguiente = sig;
-    this->color = (col % 14);
+    this->color = col;
 }
 Segmento::~Segmento(){
     delete this->coordenada;

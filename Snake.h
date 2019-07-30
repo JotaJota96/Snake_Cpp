@@ -5,7 +5,6 @@
 
 class Snake{
 private:
-    Direccion proximaDireccion;
     Segmento* cabeza;
     int       largo;
 
@@ -13,12 +12,12 @@ public:
     Snake(Direccion d, int largo, Coordenada* coordenadaDeCabeza);
     ~Snake();
 
-    void setProximaDireccion(Direccion);
     int  getLargo();
+    Segmento* getSegmento(int n);
 
+    void cambiarDireccion(Direccion);
     void mover();
     void comer();
-    bool puedeIrHacia(Direccion d);
 };
 
 #endif // SNAKE_H

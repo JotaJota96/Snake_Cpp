@@ -8,8 +8,8 @@
 
 enum Direccion {ARRIBA    = 72,
                 ABAJO     = 80,
-                IZQUIERDA = 77,
-                DERECHA   = 75};
+                IZQUIERDA = 75,
+                DERECHA   = 77};
 
 
 class Coordenada{
@@ -28,6 +28,7 @@ public:
     void setY(int y);
 
     void mover(Direccion d);
+    void moverOpuesto(Direccion d);
     void down();
     void up();
     void left();

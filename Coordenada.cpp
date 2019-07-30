@@ -41,6 +41,14 @@ void Coordenada::mover(Direccion d){
     case DERECHA:   this->right(); break;
     }
 }
+void Coordenada::moverOpuesto(Direccion d){
+    switch (d) {
+    case ARRIBA:    this->down();  break;
+    case ABAJO:     this->up();    break;
+    case IZQUIERDA: this->right(); break;
+    case DERECHA:   this->left();  break;
+    }
+}
 void Coordenada::down(){
     y++;
 }
