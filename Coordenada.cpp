@@ -17,6 +17,22 @@ Coordenada::~Coordenada(){
 
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+RelacionDeCoordenadas Coordenada::relacion(Coordenada &c1, Coordenada &c2){
+    if (c1.getX() <  c2.getX() && c1.getY() <  c2.getY()) return MENOR_MENOR;
+    if (c1.getX() <  c2.getX() && c1.getY() == c2.getY()) return MENOR_IGUAL;
+    if (c1.getX() <  c2.getX() && c1.getY() >  c2.getY()) return MENOR_MAYOR;
+    if (c1.getX() == c2.getX() && c1.getY() <  c2.getY()) return IGUAL_MENOR;
+    if (c1.getX() == c2.getX() && c1.getY() == c2.getY()) return IGUAL_IGUAL;
+    if (c1.getX() == c2.getX() && c1.getY() >  c2.getY()) return IGUAL_MAYOR;
+    if (c1.getX() >  c2.getX() && c1.getY() <  c2.getY()) return MAYOR_MENOR;
+    if (c1.getX() >  c2.getX() && c1.getY() == c2.getY()) return MAYOR_IGUAL;
+    if (c1.getX() >  c2.getX() && c1.getY() >  c2.getY()) return MAYOR_MAYOR;
+    return IGUAL_IGUAL;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 int Coordenada::getX(){
     return this->x;
 }
@@ -31,8 +47,7 @@ void Coordenada::setY(int y){
 
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////
 void Coordenada::mover(Direccion d){
     switch (d) {
     case ARRIBA:    this->up();    break;

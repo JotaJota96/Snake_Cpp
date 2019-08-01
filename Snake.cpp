@@ -1,15 +1,18 @@
 #include "Snake.h"
 
 Snake::Snake(Direccion d, int l, Coordenada* coordenadaDeCabeza){
+    this->comidaEnDigesta = NULL;
+    this->tiempoDeDigesta = -1;
+
     this->cabeza = new Segmento(d, coordenadaDeCabeza, NULL, NULL, 15);
-    Segmento* segAux = cabeza;
+    this->cola = cabeza;
     Coordenada* corAux;
 
     for (int i = 1; i < l; i++){
-        corAux = new Coordenada(segAux->getCoordenada());
+        corAux = new Coordenada(this->cola->getCoordenada());
         corAux->moverOpuesto(d);
-        segAux->setSiguiente(new Segmento(d, corAux, segAux, NULL, i));
-        segAux = segAux->getSiguiente();
+        this->cola->setSiguiente(new Segmento(d, corAux, this->cola, NULL, i));
+        this->cola = this->cola->getSiguiente();
     }
 
     this->largo = l;
@@ -22,11 +25,10 @@ Snake::~Snake(){
         delete borrar;
     }
     delete this->cabeza;
+    if (this->comidaEnDigesta != NULL){
+        delete this->comidaEnDigesta;
+    }
 }
-
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 int Snake::getLargo(){
@@ -38,6 +40,12 @@ Segmento* Snake::getSegmento(int n){
         s = s->getSiguiente();
     }
     return s;
+}
+Segmento* Snake::getCabeza(){
+    return this->cabeza;
+}
+Segmento* Snake::getCola(){
+    return this->cola;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +60,32 @@ void Snake::cambiarDireccion(Direccion d){
 }
 void Snake::mover(){
     cabeza->moverEnCascada();
+    if (tiempoDeDigesta < 0){
+        return;
+    }else if (tiempoDeDigesta == 1) {
+        this->comidaEnDigesta->setProximaDireccion(this->cola->getProximaDireccion());
+    }else if (tiempoDeDigesta == 0) {
+        this->cola->setSiguiente(this->comidaEnDigesta);
+        this->comidaEnDigesta->setAnterior(this->cola);
+        this->cola = this->comidaEnDigesta;
+        this->comidaEnDigesta = NULL;
+        this->largo++;
+    }
+    this->tiempoDeDigesta--;
 }
-void Snake::comer(){
+void Snake::comer(Segmento* s){
+    this->tiempoDeDigesta = this->largo-1;
+    this->comidaEnDigesta = s;
+}
 
-}
+
+
+
+
+
+
+
+
+
+
+

@@ -10,7 +10,15 @@ enum Direccion {ARRIBA    = 72,
                 ABAJO     = 80,
                 IZQUIERDA = 75,
                 DERECHA   = 77};
-
+enum RelacionDeCoordenadas {MENOR_MENOR,
+                            MENOR_IGUAL,
+                            MENOR_MAYOR,
+                            IGUAL_MENOR,
+                            IGUAL_IGUAL,
+                            IGUAL_MAYOR,
+                            MAYOR_MENOR,
+                            MAYOR_IGUAL,
+                            MAYOR_MAYOR};
 
 class Coordenada{
 private:
@@ -21,6 +29,8 @@ public:
     Coordenada(int x, int y);
     Coordenada(Coordenada*);
     ~Coordenada();
+
+    static RelacionDeCoordenadas relacion(Coordenada &c1, Coordenada &c2);
 
     int getX();
     int getY();
