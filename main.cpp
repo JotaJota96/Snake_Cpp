@@ -10,23 +10,29 @@ using namespace std;
 #define BORDE_SUPERIOR  0
 #define BORDE_INFERIOR  19
 #define BORDE_IZQUIERDO 0
-#define BORDE_DERECHO   35
+#define BORDE_DERECHO   30
 
 void mostrarBordes();
+void mostrarPuntaje(int p);
 //-----------------------------
 void GoToXY(Coordenada c);
 void OcultarCursor();
 void cambiarColor(int color);
 int  numeroAleatorioEntre(int a, int b);
+
 ////////////////////////////////////////////////////////////////////
 int main(){
     srand(time(NULL));
     OcultarCursor();
     mostrarBordes();
 
-    Snake* snk = new Snake(DERECHA, 10, new Coordenada(17,9));
+    Snake* snk = new Snake(DERECHA, 10, new Coordenada(13,9));
     Segmento* comida = NULL;
     int tecla = 0;
+    int puntaje = 0;
+
+
+    mostrarPuntaje(puntaje);
 
     while (tecla != 27){
         if (kbhit()){
@@ -40,7 +46,6 @@ int main(){
             default:        continue;
             }
         }
-
 
         if (comida == NULL){
             comida = new Segmento(ARRIBA, new Coordenada(numeroAleatorioEntre(BORDE_IZQUIERDO+1, BORDE_DERECHO-1), numeroAleatorioEntre(BORDE_SUPERIOR+1, BORDE_INFERIOR-1)), NULL, NULL, numeroAleatorioEntre(1,14));
@@ -66,6 +71,7 @@ int main(){
         if (Coordenada::relacion(*comida->getCoordenada(), *snk->getSegmento(1)->getCoordenada()) == IGUAL_IGUAL){
             snk->comer(comida);
             comida = NULL;
+            mostrarPuntaje(++puntaje);
         }
 
         Sleep(250);
@@ -74,6 +80,29 @@ int main(){
     GoToXY(Coordenada(0,0));
     cambiarColor(15);
     return 0;
+}
+
+////////////////////////////////////////////////////////////////////
+void mostrarBordes(){
+    cambiarColor(15);
+    //bordes horizontales
+    for (int i = BORDE_IZQUIERDO; i <= BORDE_DERECHO; i++){
+        GoToXY(Coordenada(i, BORDE_SUPERIOR));
+        printf("%c%c", 219, 219);
+        GoToXY(Coordenada(i, BORDE_INFERIOR));
+        printf("%c%c", 219, 219);
+    }
+    // bordes verticales
+    for (int i = BORDE_SUPERIOR; i <= BORDE_INFERIOR; i++){
+        GoToXY(Coordenada(BORDE_IZQUIERDO, i));
+        printf("%c%c", 219, 219);
+        GoToXY(Coordenada(BORDE_DERECHO, i));
+        printf("%c%c", 219, 219);
+    }
+}
+void mostrarPuntaje(int p){
+    GoToXY(Coordenada(BORDE_DERECHO+1, BORDE_SUPERIOR));
+    printf("Puntuacion: %d", p);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -98,22 +127,4 @@ void cambiarColor(int color){
 }
 int numeroAleatorioEntre(int min, int max){
     return min + rand() % (max +1 - min);
-}
-////////////////////////////////////////////////////////////////////
-void mostrarBordes(){
-    cambiarColor(15);
-    //bordes horizontales
-    for (int i = BORDE_IZQUIERDO; i <= BORDE_DERECHO; i++){
-        GoToXY(Coordenada(i, BORDE_SUPERIOR));
-        printf("%c%c", 219, 219);
-        GoToXY(Coordenada(i, BORDE_INFERIOR));
-        printf("%c%c", 219, 219);
-    }
-    // bordes verticales
-    for (int i = BORDE_SUPERIOR; i <= BORDE_INFERIOR; i++){
-        GoToXY(Coordenada(BORDE_IZQUIERDO, i));
-        printf("%c%c", 219, 219);
-        GoToXY(Coordenada(BORDE_DERECHO, i));
-        printf("%c%c", 219, 219);
-    }
 }

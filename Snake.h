@@ -7,9 +7,7 @@ class Snake{
 private:
     Segmento* cabeza;
     Segmento* cola;
-    Segmento* comidaEnDigesta; // para agregar un segmento al final cuando se come
     int       largo;
-    int       tiempoDeDigesta;
 public:
     Snake(Direccion d, int largo, Coordenada* coordenadaDeCabeza);
     ~Snake();

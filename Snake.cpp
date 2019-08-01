@@ -1,9 +1,6 @@
 #include "Snake.h"
 
 Snake::Snake(Direccion d, int l, Coordenada* coordenadaDeCabeza){
-    this->comidaEnDigesta = NULL;
-    this->tiempoDeDigesta = -1;
-
     this->cabeza = new Segmento(d, coordenadaDeCabeza, NULL, NULL, 15);
     this->cola = cabeza;
     Coordenada* corAux;
@@ -25,9 +22,6 @@ Snake::~Snake(){
         delete borrar;
     }
     delete this->cabeza;
-    if (this->comidaEnDigesta != NULL){
-        delete this->comidaEnDigesta;
-    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,23 +53,14 @@ void Snake::cambiarDireccion(Direccion d){
     this->cabeza->setProximaDireccion(d);
 }
 void Snake::mover(){
-    cabeza->moverEnCascada();
-    if (tiempoDeDigesta < 0){
-        return;
-    }else if (tiempoDeDigesta == 1) {
-        this->comidaEnDigesta->setProximaDireccion(this->cola->getProximaDireccion());
-    }else if (tiempoDeDigesta == 0) {
-        this->cola->setSiguiente(this->comidaEnDigesta);
-        this->comidaEnDigesta->setAnterior(this->cola);
-        this->cola = this->comidaEnDigesta;
-        this->comidaEnDigesta = NULL;
+    this->cabeza->moverEnCascada();
+    if (this->cola->getSiguiente() != NULL){
         this->largo++;
+        this->cola = this->cola->getSiguiente();
     }
-    this->tiempoDeDigesta--;
 }
 void Snake::comer(Segmento* s){
-    this->tiempoDeDigesta = this->largo-1;
-    this->comidaEnDigesta = s;
+    this->cabeza->digerirComida(s);
 }
 
 

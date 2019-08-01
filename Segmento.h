@@ -10,6 +10,7 @@ private:
     Segmento*   siguiente;
     Coordenada* coordenada;
     int         color;
+    Segmento* comidaEnDigesta; // la comida que se está digiriendo
 public:
     Segmento(Direccion d, Coordenada* c, Segmento* ant, Segmento* sig, int color);
     ~Segmento();
@@ -24,6 +25,7 @@ public:
     int         getColor();
 
     void moverEnCascada();
+    void digerirComida(Segmento* s);
 };
 
 #endif // SEGMENTO_H
