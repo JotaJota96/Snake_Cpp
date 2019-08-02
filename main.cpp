@@ -9,10 +9,11 @@ using namespace std;
 
 // ubicacion en coordenada de cada borde
 #define BORDE_SUPERIOR  0
-#define BORDE_INFERIOR  18
+#define BORDE_INFERIOR  19
 #define BORDE_IZQUIERDO 0
 #define BORDE_DERECHO   30
 
+void autopilot(Snake* &snk);
 //-----------------------------
 void mostrarBordes();
 void mostrarGameOver();
@@ -45,18 +46,9 @@ int main(){
 
     // mientras no se presione ESC
     while (tecla != 27){
-        // si se presiona una tecla
-        if (kbhit()){
-            tecla = getch(); // captura la tecla presionada
-            // cambia la direccion de la vibora
-            switch (tecla) {
-            case ARRIBA:    snk->cambiarDireccion(ARRIBA);    break;
-            case ABAJO:     snk->cambiarDireccion(ABAJO);     break;
-            case IZQUIERDA: snk->cambiarDireccion(IZQUIERDA); break;
-            case DERECHA:   snk->cambiarDireccion(DERECHA);   break;
-            default:        continue;
-            }
-        }
+        // segun la situacion el autopilot toma la desicin de a donde dirigirse
+        autopilot(snk);
+
         moverSnake(snk);
         mostrarComida(comida);
 
@@ -75,13 +67,53 @@ int main(){
             mostrarPuntaje(++puntaje);
         }
         // pausa
-        Sleep(250);
+        //Sleep(100);
     }
 
     GoToXY(Coordenada(0,BORDE_INFERIOR+1));
     cambiarColor(15);
     return 0;
 }
+
+void autopilot(Snake* &snk){
+    // La estrategia utilizada es el sigzagueo.
+    // la vibora va de lado a lado, desde abajo hacia arriba. Al llegar a arriba, vuelve a la parte inferior bajando contra el lado izquierdo del campo
+
+    // segun la direccion actual
+    switch (snk->getDireccion()) {
+    case ARRIBA:
+        // si la vibora esta a la izquierda, va hacia la derecxha y vicebersa
+        if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_IZQUIERDO+2){
+            snk->cambiarDireccion(DERECHA);
+        }else{
+            snk->cambiarDireccion(IZQUIERDA);
+        }
+        break;
+    case ABAJO:
+        // si llega a la parte inferior gira a la derecha
+        if (snk->getCabeza()->getCoordenada()->getY() == BORDE_INFERIOR-1){
+            snk->cambiarDireccion(DERECHA);
+        }
+        break;
+    case IZQUIERDA:
+        // si llega a la izquierda, se dirige hacia arriba solo si tiene el espacio suficiente para regresar
+        if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_IZQUIERDO+2){
+            if (snk->getCabeza()->getCoordenada()->getY() > BORDE_SUPERIOR+2){
+                snk->cambiarDireccion(ARRIBA);
+            }
+        }else if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_IZQUIERDO+1){
+                snk->cambiarDireccion(ABAJO);
+        }
+        break;
+    case DERECHA:
+        // si esta sobre el borde derecho, se dirige hacia arriba
+        if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_DERECHO-1){
+            snk->cambiarDireccion(ARRIBA);
+        }
+        break;
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////
 void mostrarBordes(){
