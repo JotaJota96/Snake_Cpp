@@ -6,10 +6,14 @@
  * Esto es asi porque los caracteres en consola tienen de ancho la mitad del alto
  */
 
+// Posibles movimientos
 enum Direccion {ARRIBA    = 72,
                 ABAJO     = 80,
                 IZQUIERDA = 75,
                 DERECHA   = 77};
+
+// Resultados de comparacion de coordenadas
+// El valor obtenido representa la relacion primero en el eje X y luego en el eje Y
 enum RelacionDeCoordenadas {MENOR_MENOR,
                             MENOR_IGUAL,
                             MENOR_MAYOR,

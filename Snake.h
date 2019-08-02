@@ -16,6 +16,7 @@ public:
     Segmento* getSegmento(int n);
     Segmento* getCabeza();
     Segmento* getCola();
+    Direccion getDireccion();
 
     void cambiarDireccion(Direccion);
     void mover();

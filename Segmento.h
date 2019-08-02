@@ -24,8 +24,8 @@ public:
     Coordenada* getCoordenada();
     int         getColor();
 
-    void moverEnCascada();
-    void digerirComida(Segmento* s);
+    void moverEnCascada(); // mueve el segmento actual y el que le sigue (recursivo)
+    void digerirComida(Segmento* s); // define comidaEnDigesta
 };
 
 #endif // SEGMENTO_H

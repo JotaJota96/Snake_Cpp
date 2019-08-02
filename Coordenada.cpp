@@ -20,6 +20,7 @@ Coordenada::~Coordenada(){
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 RelacionDeCoordenadas Coordenada::relacion(Coordenada &c1, Coordenada &c2){
+    // no encontre otra manera mas corta de realizar la doble comparacion
     if (c1.getX() <  c2.getX() && c1.getY() <  c2.getY()) return MENOR_MENOR;
     if (c1.getX() <  c2.getX() && c1.getY() == c2.getY()) return MENOR_IGUAL;
     if (c1.getX() <  c2.getX() && c1.getY() >  c2.getY()) return MENOR_MAYOR;
