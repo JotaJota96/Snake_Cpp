@@ -13,6 +13,7 @@ using namespace std;
 #define BORDE_IZQUIERDO 0
 #define BORDE_DERECHO   30
 
+void autopilot(Snake* &snk, Segmento* &comida);
 //-----------------------------
 void mostrarBordes();
 void mostrarGameOver();
@@ -56,6 +57,8 @@ int main(){
             case DERECHA:   snk->cambiarDireccion(DERECHA);   break;
             default:        continue;
             }
+        }else {
+            autopilot(snk, comida);
         }
         moverSnake(snk);
         mostrarComida(comida);
@@ -75,7 +78,7 @@ int main(){
             mostrarPuntaje(++puntaje);
         }
         // pausa
-        Sleep(250);
+        Sleep(50);
     }
 
     GoToXY(Coordenada(0,BORDE_INFERIOR+1));
@@ -83,9 +86,99 @@ int main(){
     return 0;
 }
 
+void autopilot(Snake* &snk, Segmento* &comida){
+    switch (Coordenada::relacion(*comida->getCoordenada(), *snk->getCabeza()->getCoordenada())) {
+    case MENOR_MENOR: // la comida esta arriba a la izquierda
+        if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
+            snk->cambiarDireccion(IZQUIERDA);
+        }else{
+            snk->cambiarDireccion(ARRIBA);
+        }
+        break;
+    case MENOR_MAYOR: // la comida esta abajo a la izquierda
+        if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
+            snk->cambiarDireccion(IZQUIERDA);
+        }else{
+            snk->cambiarDireccion(ABAJO);
+        }
+        break;
+    case MAYOR_MENOR: // la comida esta arriba a la derecha
+        if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
+            snk->cambiarDireccion(DERECHA);
+        }else{
+            snk->cambiarDireccion(ARRIBA);
+        }
+        break;
+    case MAYOR_MAYOR: // la comida esta abajo a la derecha
+        if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
+            snk->cambiarDireccion(DERECHA);
+        }else{
+            snk->cambiarDireccion(ABAJO);
+        }
+        break;
+    // Si esta a la altura tanto horizontal o vertical
+    case MENOR_IGUAL:
+        snk->cambiarDireccion(IZQUIERDA);
+        break;
+    case MAYOR_IGUAL:
+        snk->cambiarDireccion(DERECHA);
+        break;
+    case IGUAL_MENOR:
+        snk->cambiarDireccion(ARRIBA);
+        break;
+    case IGUAL_MAYOR:
+        snk->cambiarDireccion(ABAJO);
+        break;
+    // Esta comiendo
+    case IGUAL_IGUAL:
+        break;
+    }
+
+    switch (snk->getCabeza()->getProximaDireccion()) {
+    case ARRIBA:
+        if (snk->getCabeza()->getCoordenada()->getY() == BORDE_SUPERIOR+1){
+            if ((BORDE_DERECHO-BORDE_IZQUIERDO)/2 - (snk->getCabeza()->getCoordenada()->getX() /2) < 0){
+                snk->cambiarDireccion(IZQUIERDA);
+            }else{
+                snk->cambiarDireccion(DERECHA);
+            }
+        }
+        break;
+    case ABAJO:
+        if (snk->getCabeza()->getCoordenada()->getY() == BORDE_INFERIOR-1){
+            if ((BORDE_DERECHO-BORDE_IZQUIERDO)/2 - (snk->getCabeza()->getCoordenada()->getX() /2) < 0){
+                snk->cambiarDireccion(IZQUIERDA);
+            }else{
+                snk->cambiarDireccion(DERECHA);
+            }
+        }
+        break;
+    case IZQUIERDA:
+        if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_IZQUIERDO+1){
+            if ((BORDE_INFERIOR-BORDE_SUPERIOR)/2 - snk->getCabeza()->getCoordenada()->getY() < 0){
+                snk->cambiarDireccion(ABAJO);
+            }else{
+                snk->cambiarDireccion(ARRIBA);
+            }
+        }
+        break;
+    case DERECHA:
+        if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_DERECHO-1){
+            if ((BORDE_INFERIOR-BORDE_SUPERIOR)/2 - snk->getCabeza()->getCoordenada()->getY() < 0){
+                snk->cambiarDireccion(ABAJO);
+            }else{
+                snk->cambiarDireccion(ARRIBA);
+            }
+        }
+        break;
+    }
+
+
+}
+
 ////////////////////////////////////////////////////////////////////
 void mostrarBordes(){
-    cambiarColor(15);
+    cambiarColor(14);
     //bordes horizontales
     for (int i = BORDE_IZQUIERDO; i <= BORDE_DERECHO; i++){
         GoToXY(Coordenada(i, BORDE_SUPERIOR));
