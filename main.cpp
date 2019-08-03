@@ -64,6 +64,7 @@ int main(){
         mostrarComida(comida);
 
         if (verificarColicionConBordes(snk) || verificarColicionConSnake(snk)){
+//        if (verificarColicionConBordes(snk)){
             mostrarGameOver();
             tecla = 27;
             continue;
@@ -87,6 +88,7 @@ int main(){
 }
 
 void autopilot(Snake* &snk, Segmento* &comida){
+
     switch (Coordenada::relacion(*comida->getCoordenada(), *snk->getCabeza()->getCoordenada())) {
     case MENOR_MENOR: // la comida esta arriba a la izquierda
         if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
@@ -156,18 +158,18 @@ void autopilot(Snake* &snk, Segmento* &comida){
     case IZQUIERDA:
         if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_IZQUIERDO+1){
             if ((BORDE_INFERIOR-BORDE_SUPERIOR)/2 - snk->getCabeza()->getCoordenada()->getY() < 0){
-                snk->cambiarDireccion(ABAJO);
-            }else{
                 snk->cambiarDireccion(ARRIBA);
+            }else{
+                snk->cambiarDireccion(ABAJO);
             }
         }
         break;
     case DERECHA:
         if (snk->getCabeza()->getCoordenada()->getX()/2 == BORDE_DERECHO-1){
             if ((BORDE_INFERIOR-BORDE_SUPERIOR)/2 - snk->getCabeza()->getCoordenada()->getY() < 0){
-                snk->cambiarDireccion(ABAJO);
-            }else{
                 snk->cambiarDireccion(ARRIBA);
+            }else{
+                snk->cambiarDireccion(ABAJO);
             }
         }
         break;
