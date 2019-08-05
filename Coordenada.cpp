@@ -33,6 +33,11 @@ RelacionDeCoordenadas Coordenada::relacion(Coordenada &c1, Coordenada &c2){
     return IGUAL_IGUAL;
 }
 
+
+float Coordenada::distancia(Coordenada &c1, Coordenada &c2){
+    return sqrt(pow(c2.getX()/2 - c1.getX()/2, 2) + pow(c2.getY() - c1.getY(), 2));
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 int Coordenada::getX(){
     return this->x;

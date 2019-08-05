@@ -9,7 +9,7 @@ using namespace std;
 
 // ubicacion en coordenada de cada borde
 #define BORDE_SUPERIOR  0
-#define BORDE_INFERIOR  18
+#define BORDE_INFERIOR  16
 #define BORDE_IZQUIERDO 0
 #define BORDE_DERECHO   30
 
@@ -65,7 +65,7 @@ int main(){
 
         if (verificarColicionConBordes(snk) || verificarColicionConSnake(snk)){
 //        if (verificarColicionConBordes(snk)){
-            mostrarGameOver();
+            //mostrarGameOver();
             tecla = 27;
             continue;
         }
@@ -79,6 +79,8 @@ int main(){
             mostrarPuntaje(++puntaje);
         }
         // pausa
+        //GoToXY(Coordenada(0,BORDE_INFERIOR+1));
+        //system("PAUSE");
         Sleep(50);
     }
 
@@ -88,7 +90,8 @@ int main(){
 }
 
 void autopilot(Snake* &snk, Segmento* &comida){
-
+    // Dependiendo de la ubicacion de la comida respecto a la cabeza
+    // se dirige hacia la direccion mas cercana
     switch (Coordenada::relacion(*comida->getCoordenada(), *snk->getCabeza()->getCoordenada())) {
     case MENOR_MENOR: // la comida esta arriba a la izquierda
         if (abs(snk->getCabeza()->getCoordenada()->getX() - comida->getCoordenada()->getX()) < abs(snk->getCabeza()->getCoordenada()->getY() - comida->getCoordenada()->getY())){
@@ -136,6 +139,7 @@ void autopilot(Snake* &snk, Segmento* &comida){
         break;
     }
 
+    // segun la direccion, verifica si mantener la nueva direccion implica chocar contra un borde
     switch (snk->getCabeza()->getProximaDireccion()) {
     case ARRIBA:
         if (snk->getCabeza()->getCoordenada()->getY() == BORDE_SUPERIOR+1){
@@ -175,7 +179,101 @@ void autopilot(Snake* &snk, Segmento* &comida){
         break;
     }
 
+    // si esta por chocar contra si misma, se dirige hacia donde haya mas espacio
+    Coordenada* aux = new Coordenada(snk->getCabeza()->getCoordenada());
+    aux->mover(snk->getDireccion());
+    for (int i = 4; i <= snk->getLargo(); i++){
+        if (Coordenada::relacion(*aux, *snk->getSegmento(i)->getCoordenada()) == IGUAL_IGUAL){
+            Coordenada* c1 = NULL;
+            Coordenada* c2 = NULL;
+            Coordenada* borrar = NULL;
+            aux->moverOpuesto(snk->getDireccion());
 
+            switch (snk->getDireccion()) {
+            case ARRIBA:
+            case ABAJO:
+                for (int i = 2; i <= snk->getLargo(); i++){
+                    if (Coordenada::relacion(*snk->getSegmento(i)->getCoordenada(), *aux) == MENOR_IGUAL){
+                        if (c1 != NULL){
+                            if (Coordenada::relacion(*c1, *snk->getSegmento(i)->getCoordenada()) != MAYOR_IGUAL){
+                                continue;
+                            }
+                        }
+                        c1 = snk->getSegmento(i)->getCoordenada();
+                    }
+                }
+                for (int i = 2; i <= snk->getLargo(); i++){
+                    if (Coordenada::relacion(*snk->getSegmento(i)->getCoordenada(), *aux) == MAYOR_IGUAL){
+                        if (c2 != NULL){
+                            if (Coordenada::relacion(*c2, *snk->getSegmento(i)->getCoordenada()) != MAYOR_IGUAL){
+                                continue;
+                            }
+                        }
+                        c2 = snk->getSegmento(i)->getCoordenada();
+                    }
+                }
+
+                if (c1 == NULL){
+                    c1 = new Coordenada(BORDE_IZQUIERDO, aux->getY());
+                    borrar = c1;
+                }
+                if (c2 == NULL){
+                    c2 = new Coordenada(BORDE_DERECHO, aux->getY());
+                    borrar = c2;
+                }
+
+                if (Coordenada::distancia(*c1, *aux) < Coordenada::distancia(*c2, *aux)){
+                    snk->cambiarDireccion(DERECHA);
+                }else{
+                    snk->cambiarDireccion(IZQUIERDA);
+                }
+
+                if (borrar != NULL) delete borrar;
+                break;
+            case IZQUIERDA:
+            case DERECHA:
+                for (int i = 2; i <= snk->getLargo(); i++){
+                    if (Coordenada::relacion(*snk->getSegmento(i)->getCoordenada(), *aux) == IGUAL_MENOR){
+                        if (c1 != NULL){
+                            if (Coordenada::relacion(*c1, *snk->getSegmento(i)->getCoordenada()) != IGUAL_MAYOR){
+                                continue;
+                            }
+                        }
+                        c1 = snk->getSegmento(i)->getCoordenada();
+                    }
+                }
+                for (int i = 2; i <= snk->getLargo(); i++){
+                    if (Coordenada::relacion(*snk->getSegmento(i)->getCoordenada(), *aux) == IGUAL_MAYOR){
+                        if (c2 != NULL){
+                            if (Coordenada::relacion(*c2, *snk->getSegmento(i)->getCoordenada()) != IGUAL_MENOR){
+                                continue;
+                            }
+                        }
+                        c2 = snk->getSegmento(i)->getCoordenada();
+                    }
+                }
+
+                if (c1 == NULL){
+                    c1 = new Coordenada(BORDE_INFERIOR, aux->getX()/2);
+                    borrar = c1;
+                }
+                if (c2 == NULL){
+                    c2 = new Coordenada(BORDE_SUPERIOR, aux->getX()/2);
+                    borrar = c2;
+                }
+
+                if (Coordenada::distancia(*c1, *aux) < Coordenada::distancia(*c2, *aux)){
+                    snk->cambiarDireccion(ABAJO);
+                }else{
+                    snk->cambiarDireccion(ARRIBA);
+                }
+
+                if (borrar != NULL) delete borrar;
+                break;
+            }
+            break;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 #ifndef COORDENADA_H
 #define COORDENADA_H
+#include "math.h"
 
 /* Esta clase esta pensada para representar posiciones en la consola tratandola como una cuadricula
  * Para que la cuadricula sea perfecta (basada en cuadrados), al mover horizontalmente se incremente en 2 el valor X
@@ -35,6 +36,7 @@ public:
     ~Coordenada();
 
     static RelacionDeCoordenadas relacion(Coordenada &c1, Coordenada &c2);
+    static float                 distancia(Coordenada &c1, Coordenada &c2);
 
     int getX();
     int getY();
